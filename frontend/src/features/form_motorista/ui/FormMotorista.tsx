@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { supabase } from "../../../app/api/supabaseClient";
 import type { Setor, Veiculo } from "@/entities";
 import type { MotoristaExpandido } from "../model/types";
-import { carregarLista } from "../api/carregarLista";
+import { carregarBasicos, carregarLista } from "../api/carregarLista";
 import { onSubmit } from "../api/onSubmit";
 
 export default function FormMotorista() {
@@ -11,31 +10,15 @@ export default function FormMotorista() {
 	const [setores, setSetores] = useState<Setor[]>([]);
 	const [veiculos, setVeiculos] = useState<Veiculo[]>([]);
 	const [setorId, setSetorId] = useState<number | "">("");
-	const [codVeiculo, setCodVeiculo] = useState<number | "">("");
 	const [carregando, setCarregando] = useState(false);
 	const [statusMsg, setStatusMsg] = useState<string | null>(null);
 
 	const [lista, setLista] = useState<MotoristaExpandido[]>([]);
 	const [carregandoLista, setCarregandoLista] = useState(false);
 
-	const carregarBasicos = async () => {
-		const [{ data: setoresData }, { data: veicData }] = await Promise.all([
-			supabase
-				.from("setor")
-				.select("*")
-				.order("nome_setor", { ascending: true }),
-			supabase
-				.from("veiculo")
-				.select("*")
-				.order("cod_veiculo", { ascending: true }),
-		]);
-		setSetores(setoresData ?? []);
-		setVeiculos(veicData ?? []);
-	};
-
 	useEffect(() => {
 		(async () => {
-			await carregarBasicos();
+			await carregarBasicos({ setSetores, setVeiculos });
 		})();
 	}, []);
 
@@ -66,13 +49,11 @@ export default function FormMotorista() {
 						matricula,
 						nome,
 						setorId,
-						codVeiculo,
 						setStatusMsg,
 						setCarregando,
 						setMatricula,
 						setNome,
 						setSetorId,
-						setCodVeiculo,
 						setLista,
 						setCarregandoLista,
 						setores,
@@ -127,28 +108,7 @@ export default function FormMotorista() {
 						))}
 					</select>
 				</label>
-				<label>
-					Veículo
-					<select
-						value={codVeiculo}
-						onChange={(e) =>
-							setCodVeiculo(
-								e.target.value === ""
-									? ""
-									: Number(e.target.value)
-							)
-						}
-						required
-					>
-						<option value="">Selecione um veículo</option>
-						{veiculos.map((v) => (
-							<option key={v.cod_veiculo} value={v.cod_veiculo}>
-								{v.cod_veiculo}{" "}
-								{v.categoria ? `- ${v.categoria}` : ""}
-							</option>
-						))}
-					</select>
-				</label>
+
 				<button disabled={carregando} type="submit">
 					{carregando ? "Salvando..." : "Adicionar"}
 				</button>
@@ -167,19 +127,12 @@ export default function FormMotorista() {
 							<span>Matrícula</span>
 							<span>Nome</span>
 							<span>Setor</span>
-							<span>Veículo</span>
 						</div>
 						{lista.map((m) => (
 							<div key={m.matricula} className="linha">
 								<span>{m.matricula}</span>
 								<span>{m.nome}</span>
 								<span>{m.setor_nome || m.setor_id || "—"}</span>
-								<span>
-									{m.cod_veiculo}
-									{m.veiculo_categoria
-										? ` (${m.veiculo_categoria})`
-										: ""}
-								</span>
 							</div>
 						))}
 					</div>

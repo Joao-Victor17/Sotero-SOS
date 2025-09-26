@@ -9,13 +9,11 @@ export const onSubmit = async (props: {
 	matricula: number | "";
 	nome: string;
 	setorId: number | "";
-	codVeiculo: number | "";
 	setStatusMsg: React.Dispatch<React.SetStateAction<string | null>>;
 	setCarregando: React.Dispatch<React.SetStateAction<boolean>>;
 	setMatricula: React.Dispatch<React.SetStateAction<number | "">>;
 	setNome: React.Dispatch<React.SetStateAction<string>>;
 	setSetorId: React.Dispatch<React.SetStateAction<number | "">>;
-	setCodVeiculo: React.Dispatch<React.SetStateAction<number | "">>;
 	setLista: React.Dispatch<React.SetStateAction<MotoristaExpandido[]>>;
 	setCarregandoLista: React.Dispatch<React.SetStateAction<boolean>>;
 	setores: Setor[];
@@ -26,13 +24,11 @@ export const onSubmit = async (props: {
 		matricula,
 		nome,
 		setorId,
-		codVeiculo,
 		setStatusMsg,
 		setCarregando,
 		setMatricula,
 		setNome,
 		setSetorId,
-		setCodVeiculo,
 		setLista,
 		setCarregandoLista,
 		setores,
@@ -44,10 +40,9 @@ export const onSubmit = async (props: {
 	if (
 		matricula === "" ||
 		!nome.trim() ||
-		setorId === "" ||
-		codVeiculo === ""
+		setorId === ""
 	) {
-		setStatusMsg("Informe matrícula, nome, setor e veículo.");
+		setStatusMsg("Informe matrícula, nome e setor.");
 		return;
 	}
 
@@ -56,7 +51,6 @@ export const onSubmit = async (props: {
 		matricula: Number(matricula),
 		nome: nome.trim(),
 		setor_id: Number(setorId),
-		cod_veiculo: Number(codVeiculo),
 	});
 
 	setCarregando(false);
@@ -67,7 +61,6 @@ export const onSubmit = async (props: {
 		setMatricula("");
 		setNome("");
 		setSetorId("");
-		setCodVeiculo("");
 		carregarLista({
 			setLista,
 			setStatusMsg,

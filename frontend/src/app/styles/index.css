@@ -223,6 +223,7 @@ h1 {
 	color: #fff;
 	border: none;
 	padding: 10px 18px;
+	/*margin: 1em 0;*/
 	border-radius: 10px;
 	font-size: 0.9rem;
 	font-weight: 500;
@@ -694,12 +695,13 @@ input:invalid:not(:focus):not(:placeholder-shown) {
 }
 
 /* Smooth transitions */
-*,
+
+/**,
 *::before,
 *::after {
 	transition: background-color 0.25s ease, border-color 0.25s ease,
 		color 0.25s ease, fill 0.25s ease, stroke 0.25s ease;
-}
+}*/
 
 /* Space under last paragraph in status blocks */
 .status:last-child {

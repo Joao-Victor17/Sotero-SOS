@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/app/api/supabaseClient";
-import type { Motorista, Motivo, Veiculo } from "@/entities";
+import type { Motorista, Motivo, Veiculo, Setor } from "@/entities";
+import { carregarBasicos } from "@/features/form_motorista/api/carregarLista";
 
 function dataHoje(): string {
 	const d = new Date();
@@ -22,8 +23,11 @@ type DriverExpandido = Motorista & { veiculo?: Veiculo | null };
 
 export default function FormAtendimento() {
 	const [Drivers, setDrivers] = useState<Motorista[]>([]);
+	const [setores, setSetores] = useState<Setor[]>([]);
+	const [setorId, setSetorId] = useState<number | "">("");
 	const [motivos, setMotivos] = useState<Motivo[]>([]);
 	const [veiculos, setVeiculos] = useState<Veiculo[]>([]);
+	const [codVeiculo, setCodVeiculo] = useState<number | "">("");
 	const [matricula, setMatricula] = useState<number | "">("");
 	const [codMotivo, setCodMotivo] = useState<number | "">("");
 	const [local, setLocal] = useState("");
@@ -51,6 +55,7 @@ export default function FormAtendimento() {
 			setVeiculos(vRes.data ?? []);
 		};
 		carregar();
+		carregarBasicos({ setSetores, setVeiculos });
 	}, []);
 
 	const DriversComVeiculo: DriverExpandido[] = useMemo(() => {
@@ -107,7 +112,8 @@ export default function FormAtendimento() {
 	};
 
 	return (
-		<form onSubmit={onSubmit} className="card">
+		<div className="card">
+		<form onSubmit={onSubmit} className="">
 			<h2>Abrir Atendimento (SOS)</h2>
 			<label>
 				Motorista
@@ -151,6 +157,49 @@ export default function FormAtendimento() {
 				</select>
 			</label>
 			<label>
+					Setor
+					<select
+						value={setorId}
+						onChange={(e) =>
+							setSetorId(
+								e.target.value === ""
+									? ""
+									: Number(e.target.value)
+							)
+						}
+						required
+					>
+						<option value="">Selecione um setor</option>
+						{setores.map((s) => (
+							<option key={s.id} value={s.id}>
+								{s.nome_setor} {s.turno ? `- ${s.turno}` : ""}
+							</option>
+						))}
+					</select>
+			</label>
+			<label>
+					Veículo
+					<select
+						value={codVeiculo}
+						onChange={(e) =>
+							setCodVeiculo(
+								e.target.value === ""
+									? ""
+									: Number(e.target.value)
+							)
+						}
+						required
+					>
+						<option value="">Selecione um veículo</option>
+						{veiculos.map((v) => (
+							<option key={v.cod_veiculo} value={v.cod_veiculo}>
+								{v.cod_veiculo}{" "}
+								{v.categoria ? `- ${v.categoria}` : ""}
+							</option>
+						))}
+					</select>
+				</label>
+			<label>
 				Local do SOS
 				<input
 					type="text"
@@ -165,5 +214,6 @@ export default function FormAtendimento() {
 			</button>
 			{statusMsg && <p className="status">{statusMsg}</p>}
 		</form>
+		</div>
 	);
 }

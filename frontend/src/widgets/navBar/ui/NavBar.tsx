@@ -9,6 +9,7 @@ import {
 	FiBookmark,
 } from "react-icons/fi";
 import { FaTruck, FaUsers, FaLayerGroup, FaListUl } from "react-icons/fa";
+import { TbReportAnalytics } from "react-icons/tb";
 import { useAuth } from "@/features/auth/model";
 
 /**
@@ -160,6 +161,12 @@ const NavBar: FC<SidebarLinkProps> = () => {
 						to="/Home/configuracoes"
 						icon={<FiSettings size={22} />}
 						text="Configurações"
+						expanded={expanded}
+					/>
+					<SidebarLink
+						to="/Home/relatorios"
+						icon={<TbReportAnalytics size={22} />}
+						text="Relatórios"
 						expanded={expanded}
 					/>
 				</ul>

@@ -33,3 +33,21 @@ export const carregarLista = async (props: {
 	props.setLista(expandidos);
 	props.setCarregandoLista(false);
 };
+
+export const carregarBasicos = async (props: {
+	setSetores: React.Dispatch<React.SetStateAction<Setor[]>>;
+	setVeiculos: React.Dispatch<React.SetStateAction<Veiculo[]>>;
+}) => {
+	const [{ data: setoresData }, { data: veicData }] = await Promise.all([
+		supabase
+			.from("setor")
+			.select("*")
+			.order("nome_setor", { ascending: true }),
+		supabase
+			.from("veiculo")
+			.select("*")
+			.order("cod_veiculo", { ascending: true }),
+	]);
+	props.setSetores(setoresData ?? []);
+	props.setVeiculos(veicData ?? []);
+};

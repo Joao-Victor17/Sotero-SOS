@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { FaTruck } from "react-icons/fa";
 import { supabase } from "@/app/api/supabaseClient";
 import EditarAtendimento from "@/features/edit_atendimento/ui/EditarAtendimento";
 import type { Atendimento, Motorista, Motivo, Veiculo } from "@/entities";
@@ -16,6 +17,8 @@ import {
 import { carregarAtendimentos } from "../api/carregarAtendimentos";
 import { corresponderBusca } from "../lib/utils";
 
+import { CardVeiculo } from "@/widgets/veiculo_card/ui/CardVeiculo";
+
 type Filtro = "aberto" | "fechado" | "atrasado";
 
 export default function PainelOperacional() {
@@ -31,6 +34,7 @@ export default function PainelOperacional() {
 
 	const [tick, setTick] = useState(0);
 	const [editingId, setEditingId] = useState<number | null>(null);
+	const [id, setId] = useState(0);
 
 	useEffect(() => {
 		carregarAtendimentos({
@@ -229,6 +233,15 @@ export default function PainelOperacional() {
 					/>
 				</div>
 			</div>
+
+			<CardVeiculo props={{
+				id: 1, // Replace with actual value
+				cod_veiculo: 1234,
+				icone: <FaTruck />, // Replace with actual icon component
+				status: "Available", // Replace with actual status
+				motorista_id: 1, // Replace with actual motorista ID
+				veiculo_id: 1, // Replace with actual veiculo ID
+			}} />
 
 			{dadosFiltrados.length > 0 ? (
 				<div className="cards-grid">
